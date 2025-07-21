@@ -1,0 +1,122 @@
+import java.util.Scanner;
+
+public class PatternGeneratorApp {
+
+    public static final String CYAN = "\u001B[36m";
+    public static final String GREEN = "\u001B[32m";
+    public static final String YELLOW = "\u001B[33m";
+    public static final String RED = "\u001B[31m";
+    public static final String RESET = "\u001B[0m";
+
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        boolean keepRunning = true;
+
+        printStyled("📐 Welcome to Number Pattern Generator App", CYAN);
+        pause(800);
+
+        while (keepRunning) {
+            showMenu();
+            int choice = getValidIntInput(scanner, "➡️ Enter your choice (1-3): ");
+
+            switch (choice) {
+                case 1:
+                    int rows = getValidIntInput(scanner, "🔢 Enter number of rows for the pyramid: ");
+                    printStyled("\n🔷 Generated Number Pyramid 🔷", GREEN);
+                    generatePyramid(rows);
+                    break;
+                case 2:
+                    rows = getValidIntInput(scanner, "🔢 Enter number of rows for the triangle: ");
+                    printStyled("\n🔶 Generated Left-Aligned Triangle 🔶", GREEN);
+                    generateLeftTriangle(rows);
+                    break;
+                case 3:
+                    keepRunning = false;
+                    printStyled("👋 Exiting the app. Thank you!", YELLOW);
+                    break;
+                default:
+                    printStyled("❌ Invalid choice. Try again.", RED);
+            }
+
+            if (keepRunning) {
+                System.out.print("\n🔁 Do you want to generate another pattern? (yes/no): ");
+                String again = scanner.next().toLowerCase();
+                keepRunning = again.equals("yes") || again.equals("y");
+            }
+        }
+
+        scanner.close();
+    }
+
+    // Pattern 1: Centered Number Pyramid
+    public static void generatePyramid(int rows) {
+        for (int i = 1; i <= rows; i++) {
+            for (int s = 1; s <= rows - i; s++) {
+                System.out.print("  "); // spacing
+            }
+            for (int j = 1; j <= i; j++) {
+                System.out.print(j + " ");
+            }
+            for (int j = i - 1; j >= 1; j--) {
+                System.out.print(j + " ");
+            }
+            System.out.println();
+            pause(150);
+        }
+    }
+
+    // Pattern 2: Left-Aligned Triangle
+    public static void generateLeftTriangle(int rows) {
+        for (int i = 1; i <= rows; i++) {
+            for (int j = 1; j <= i; j++) {
+                System.out.print(j + " ");
+            }
+            System.out.println();
+            pause(150);
+        }
+    }
+
+    // Menu display
+    public static void showMenu() {
+        System.out.println("\n📊 Select a Pattern Type:");
+        System.out.println("1. Centered Number Pyramid");
+        System.out.println("2. Left-Aligned Number Triangle");
+        System.out.println("3. Exit");
+    }
+
+    // Input with validation
+    public static int getValidIntInput(Scanner scanner, String prompt) {
+        int input = -1;
+        boolean valid = false;
+
+        while (!valid) {
+            System.out.print(prompt);
+            try {
+                input = Integer.parseInt(scanner.next());
+                if (input <= 0) {
+                    printStyled("⚠️ Please enter a positive number!", RED);
+                } else {
+                    valid = true;
+                }
+            } catch (NumberFormatException e) {
+                printStyled("❗ Invalid input. Enter a valid integer!", RED);
+            }
+        }
+
+        return input;
+    }
+
+    // Styled output
+    public static void printStyled(String message, String color) {
+        System.out.println(color + message + RESET);
+    }
+
+    // Delay method for UX
+    public static void pause(int ms) {
+        try {
+            Thread.sleep(ms);
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+        }
+    }
+}
